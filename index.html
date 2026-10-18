@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR Studio – Tạo mã QR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo-mark" aria-hidden="true">▦</span>
+      <span>QR Studio</span>
+    </div>
+    <p class="tagline">Tạo mã QR đẹp, tùy biến và tải xuống ở mọi độ phân giải</p>
+  </header>
+
+  <main class="layout">
+    <section class="panel editor">
+      <!-- 1. Nội dung -->
+      <div class="card">
+        <h2><span class="step">1</span> Nội dung</h2>
+        <div class="tabs" id="typeTabs" role="tablist">
+          <button class="tab active" data-type="url">Liên kết</button>
+          <button class="tab" data-type="text">Văn bản</button>
+          <button class="tab" data-type="wifi">Wi‑Fi</button>
+          <button class="tab" data-type="email">Email</button>
+          <button class="tab" data-type="phone">Điện thoại</button>
+          <button class="tab" data-type="sms">SMS</button>
+          <button class="tab" data-type="vcard">Danh thiếp</button>
+        </div>
+
+        <div class="form" data-form="url">
+          <label>Đường dẫn (URL)
+            <input type="url" id="f-url" value="https://example.com" placeholder="https://...">
+          </label>
+        </div>
+        <div class="form hidden" data-form="text">
+          <label>Văn bản
+            <textarea id="f-text" rows="4" placeholder="Nhập nội dung bất kỳ..."></textarea>
+          </label>
+        </div>
+        <div class="form hidden" data-form="wifi">
+          <label>Tên mạng (SSID)
+            <input type="text" id="f-ssid" placeholder="MyWiFi">
+          </label>
+          <label>Mật khẩu
+            <input type="text" id="f-wpass" placeholder="••••••••">
+          </label>
+          <div class="row">
+            <label>Bảo mật
+              <select id="f-wenc">
+                <option value="WPA">WPA/WPA2/WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Không mật khẩu</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" id="f-whidden"> Mạng ẩn</label>
+          </div>
+        </div>
+        <div class="form hidden" data-form="email">
+          <label>Địa chỉ email
+            <input type="email" id="f-email" placeholder="ten@example.com">
+          </label>
+          <label>Tiêu đề
+            <input type="text" id="f-esubject">
+          </label>
+          <label>Nội dung
+            <textarea id="f-ebody" rows="3"></textarea>
+          </label>
+        </div>
+        <div class="form hidden" data-form="phone">
+          <label>Số điện thoại
+            <input type="tel" id="f-phone" placeholder="+84 912 345 678">
+          </label>
+        </div>
+        <div class="form hidden" data-form="sms">
+          <label>Số điện thoại
+            <input type="tel" id="f-smsphone" placeholder="+84 912 345 678">
+          </label>
+          <label>Tin nhắn
+            <textarea id="f-smsbody" rows="3"></textarea>
+          </label>
+        </div>
+        <div class="form hidden" data-form="vcard">
+          <div class="row">
+            <label>Họ <input type="text" id="f-vlast"></label>
+            <label>Tên <input type="text" id="f-vfirst"></label>
+          </div>
+          <div class="row">
+            <label>Điện thoại <input type="tel" id="f-vphone"></label>
+            <label>Email <input type="email" id="f-vemail"></label>
+          </div>
+          <div class="row">
+            <label>Công ty <input type="text" id="f-vorg"></label>
+            <label>Chức danh <input type="text" id="f-vtitle"></label>
+          </div>
+          <label>Website <input type="url" id="f-vurl"></label>
+          <label>Địa chỉ <input type="text" id="f-vaddr"></label>
+        </div>
+      </div>
+
+      <!-- 2. Mẫu -->
+      <div class="card">
+        <h2><span class="step">2</span> Chọn mẫu</h2>
+        <div class="templates" id="templates"></div>
+      </div>
+
+      <!-- 3. Tùy chỉnh -->
+      <details class="card" id="customize">
+        <summary><h2><span class="step">3</span> Tùy chỉnh chi tiết</h2></summary>
+
+        <div class="group">
+          <h3>Điểm ảnh</h3>
+          <div class="row">
+            <label>Kiểu
+              <select id="o-dotType">
+                <option value="square">Vuông</option>
+                <option value="dots">Chấm tròn</option>
+                <option value="rounded">Bo tròn</option>
+                <option value="extra-rounded">Bo tròn nhiều</option>
+                <option value="classy">Thanh lịch</option>
+                <option value="classy-rounded">Thanh lịch bo tròn</option>
+              </select>
+            </label>
+            <label>Tô màu
+              <select id="o-fill">
+                <option value="solid">Màu đơn</option>
+                <option value="linear">Gradient tuyến tính</option>
+                <option value="radial">Gradient tròn</option>
+              </select>
+            </label>
+          </div>
+          <div class="row colors">
+            <label class="color">Màu 1 <input type="color" id="o-color1"></label>
+            <label class="color grad-only">Màu 2 <input type="color" id="o-color2"></label>
+            <label class="grad-only linear-only">Góc xoay
+              <input type="range" id="o-rotation" min="0" max="360" step="15">
+            </label>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3>Góc định vị</h3>
+          <div class="row">
+            <label>Khung ngoài
+              <select id="o-cornerSquareType">
+                <option value="square">Vuông</option>
+                <option value="extra-rounded">Bo tròn</option>
+                <option value="dot">Tròn</option>
+              </select>
+            </label>
+            <label class="color">Màu <input type="color" id="o-cornerSquareColor"></label>
+          </div>
+          <div class="row">
+            <label>Chấm trong
+              <select id="o-cornerDotType">
+                <option value="square">Vuông</option>
+                <option value="dot">Tròn</option>
+              </select>
+            </label>
+            <label class="color">Màu <input type="color" id="o-cornerDotColor"></label>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3>Nền</h3>
+          <div class="row">
+            <label class="color">Màu nền <input type="color" id="o-bgColor"></label>
+            <label class="check"><input type="checkbox" id="o-bgTransparent"> Nền trong suốt</label>
+          </div>
+          <label>Lề (khoảng trắng quanh mã): <output id="o-marginOut"></output>
+            <input type="range" id="o-margin" min="0" max="15" step="1">
+          </label>
+        </div>
+
+        <div class="group">
+          <h3>Logo</h3>
+          <div class="row">
+            <label class="file">
+              <input type="file" id="o-logo" accept="image/*">
+              <span>Chọn ảnh logo…</span>
+            </label>
+            <button type="button" class="btn ghost small" id="o-logoRemove" hidden>Xóa logo</button>
+          </div>
+          <label>Kích thước logo: <output id="o-logoSizeOut"></output>
+            <input type="range" id="o-logoSize" min="0.15" max="0.5" step="0.05">
+          </label>
+        </div>
+
+        <div class="group">
+          <h3>Mức sửa lỗi</h3>
+          <select id="o-ecl">
+            <option value="L">L – Thấp (7%)</option>
+            <option value="M">M – Trung bình (15%)</option>
+            <option value="Q">Q – Khá (25%)</option>
+            <option value="H">H – Cao (30%, nên dùng khi có logo)</option>
+          </select>
+        </div>
+      </details>
+    </section>
+
+    <!-- Xem trước & tải xuống -->
+    <aside class="panel preview">
+      <div class="card sticky">
+        <div class="preview-box" id="previewBox">
+          <div id="qr"></div>
+        </div>
+        <p class="data-hint" id="dataHint"></p>
+
+        <h3>Độ phân giải</h3>
+        <div class="chips" id="sizes">
+          <button class="chip" data-size="256">256</button>
+          <button class="chip" data-size="512">512</button>
+          <button class="chip active" data-size="1024">1024</button>
+          <button class="chip" data-size="2048">2048</button>
+          <button class="chip" data-size="4096">4096</button>
+          <button class="chip" data-size="custom">Tùy chọn</button>
+        </div>
+        <div class="custom-size hidden" id="customSizeWrap">
+          <input type="number" id="customSize" min="64" max="8192" step="1" value="1500">
+          <span>px (64 – 8192)</span>
+        </div>
+
+        <h3>Định dạng</h3>
+        <div class="chips" id="formats">
+          <button class="chip active" data-format="png">PNG</button>
+          <button class="chip" data-format="jpeg">JPG</button>
+          <button class="chip" data-format="webp">WEBP</button>
+          <button class="chip" data-format="svg">SVG</button>
+        </div>
+
+        <p class="out-info" id="outInfo"></p>
+        <button class="btn primary" id="downloadBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v9.59l3.3-3.3a1 1 0 1 1 1.4 1.42l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.42l3.3 3.3V4a1 1 0 0 1 1-1Zm-8 15a1 1 0 0 1 1 1v1h14v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z"/></svg>
+          Tải xuống
+        </button>
+        <button class="btn ghost" id="downloadAllBtn">Tải tất cả độ phân giải (PNG)</button>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
